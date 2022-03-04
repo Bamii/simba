@@ -4,7 +4,7 @@
   "description": "free.money (wise.com clone-ish) https://",
   "main": "index.js",
   "scripts": {
-    "server": "cd backend && yarn start",
+    "server": "cd backend && yarn start"
   },
   "repository": {
     "type": "git",
