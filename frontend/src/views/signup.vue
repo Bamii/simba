@@ -41,12 +41,12 @@ export default {
   },
   methods: {
     async signup() {
-      this.unnotify();
       if(!this.username || !this.email || !this.password) {
         this.notify({ type: 'error', message: 'please fill all the fields before proceeding!' })
         return
       }
 
+      this.notify({ type: 'info', message: 'signing you up... please wait.'});
       const res = await this.$store.dispatch('signup', {
         username: this.username, email: this.email, password: this.password
       })

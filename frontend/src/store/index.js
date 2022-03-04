@@ -10,7 +10,6 @@ const {
   VUE_APP_API_BASE_URL
 } = process.env;
 const axios = _axios.create({ baseURL: VUE_APP_API_BASE_URL })
-console.log(process.env)
 
 const initialState = JSON.stringify({
   authenticated: false,

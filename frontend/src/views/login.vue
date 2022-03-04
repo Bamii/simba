@@ -40,12 +40,13 @@ export default {
         return
       }
 
+      this.notify({ type: 'info', message: 'logging you in... please wait.'});
       const res = await this.$store.dispatch('login', {
         email: this.email,
         password: this.password
       })
-      console.log(res)
 
+      this.unnotify();
       if(!res || res.error) this.notify({ type: 'error', message: res ? res.message : 'internal service error'});
       else this.$router.push('/dashboard');
     }
