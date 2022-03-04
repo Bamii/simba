@@ -1,0 +1,20 @@
+{
+  "name": "simba",
+  "version": "1.0.0",
+  "description": "free.money (wise.com clone-ish) https://",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd backend && yarn start",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bamii/simba.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bamii/simba/issues"
+  },
+  "homepage": "https://github.com/Bamii/simba#readme"
+}

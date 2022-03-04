@@ -8,7 +8,7 @@ const {
   API_BALANCE_URL = '/transactions/balance',
   API_GET_USERS_URL = '/users',
   API_CREATE_TRANSACTIONS_URL = '/transactions/create',
-  API_BASE_URL = 'http://localhost:3000'
+  API_BASE_URL
 } = process.env;
 const axios = _axios.create({ baseURL: API_BASE_URL })
 
