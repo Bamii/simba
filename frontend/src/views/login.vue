@@ -4,7 +4,7 @@
       <Input
         :value="email"
         @update:value="email = $event"
-        placeholder="enter your email" type="text"
+        placeholder="enter your email" type="email"
       />
       <Input
         :value="password"

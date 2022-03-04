@@ -1,16 +1,16 @@
-require('dotenv').config();
 import { createStore } from "vuex";
 import _axios from "axios";
 const {
-  API_LOGIN_URL = '/users/login',
-  API_SIGNUP_URL = '/users/signup',
-  API_TRANSACTIONS_URL = '/transactions',
-  API_BALANCE_URL = '/transactions/balance',
-  API_GET_USERS_URL = '/users',
-  API_CREATE_TRANSACTIONS_URL = '/transactions/create',
-  API_BASE_URL
+  VUE_APP_API_LOGIN_URL = '/users/login',
+  VUE_APP_API_SIGNUP_URL = '/users/signup',
+  VUE_APP_API_TRANSACTIONS_URL = '/transactions',
+  VUE_APP_API_BALANCE_URL = '/transactions/balance',
+  VUE_APP_API_GET_USERS_URL = '/users',
+  VUE_APP_API_CREATE_TRANSACTIONS_URL = '/transactions/create',
+  VUE_APP_API_BASE_URL
 } = process.env;
-const axios = _axios.create({ baseURL: API_BASE_URL })
+const axios = _axios.create({ baseURL: VUE_APP_API_BASE_URL })
+console.log(process.env)
 
 const initialState = JSON.stringify({
   authenticated: false,
@@ -46,7 +46,7 @@ export default createStore({
   actions: {
     async login({ dispatch, commit }, opts) {
       try {
-        const { data } = await axios.post(API_LOGIN_URL, opts)
+        const { data } = await axios.post(VUE_APP_API_LOGIN_URL, opts)
         storeCredentials('token', data.token);
         storeCredentials('user', JSON.stringify(data.user));
         commit('authenticate', data.user)
@@ -60,7 +60,7 @@ export default createStore({
     },
     async signup(_, opts) {
       try {
-        const { data } = await axios.post(API_SIGNUP_URL,  opts)
+        const { data } = await axios.post(VUE_APP_API_SIGNUP_URL,  opts)
         return data;
       } catch(e) {
         return null;
@@ -85,9 +85,9 @@ export default createStore({
         { data: { message: balance }},
         { data: { message: users }}
       ] = await Promise.all([
-        ax.get(API_TRANSACTIONS_URL),
-        ax.get(API_BALANCE_URL),
-        ax.get(API_GET_USERS_URL)
+        ax.get(VUE_APP_API_TRANSACTIONS_URL),
+        ax.get(VUE_APP_API_BALANCE_URL),
+        ax.get(VUE_APP_API_GET_USERS_URL)
       ]);
       const dashboard = { transactions, balance, users }
 
@@ -99,7 +99,7 @@ export default createStore({
     async create_transaction(_, opts) {
       const transaction = await axios
         .create({ headers: { 'Authorization': `Bearer ${getCredential('token')}` }})
-        .post(API_CREATE_TRANSACTIONS_URL, opts)
+        .post(VUE_APP_API_CREATE_TRANSACTIONS_URL, opts)
 
       return transaction.data;
     },
