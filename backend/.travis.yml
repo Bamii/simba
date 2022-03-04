@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - 'stable'
+cache:
+  yarn: true
+branches:
+  only:
+  - /.*/
+install: yarn install
+services:
+  - postgresql
+script:
+  - yarn run test-travis
