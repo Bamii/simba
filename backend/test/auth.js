@@ -1,10 +1,9 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const server = require('../server');
-const client = require('../connection');
+const server = require('../app');
+// const client = require('../db');
 
-const baseURI = '/api/v1/auth';
-const { DELETE_USER_BY_EMAIL_QUERY } = require('../src/utils/db_constants');
+const baseURI = '/users';
 
 let should = chai.should();
 chai.use(chaiHttp);
@@ -13,94 +12,16 @@ const mockData = {
   signup: {
     email: 'standard@email.com',
     password: 'random-string',
-    first_name: 'name',
-    last_name: 'money',
-    is_admin: false
+    username: 'dark',
   },
   signin: {
-    email: 'cbhgs@dfd.com',
+    email: 'standard@email.com',
     password: 'random-string'
   }
 };
 
 describe.skip('User', function() {
-  describe('/POST /auth/signin', function() {
-    it('it should sign the user in', done => {
-      chai
-        .request(server)
-        .post(`${baseURI}/signin`)
-        .send(mockData.signin)
-        .end((err, res) => {
-          const { status, data } = res.body;
-
-          should.not.exist(err);
-          res.redirects.length.should.eql(0);
-          res.type.should.eql('application/json');
-          res.status.should.eql(200);
-
-          status.should.eql('success');
-          should.exist(data);
-          data.should.be.an('object');
-          should.exist(data.token);
-          should.exist(data.user_id);
-          data.token.should.be.a('string');
-          data.user_id.should.be.a('number');
-          done();
-        });
-    });
-
-    it('it should not sign the user in if there are ANY fields missing.', done => {
-      const mockDataClone = Object.assign({}, mockData.signin);
-      delete mockDataClone.email;
-
-      chai
-        .request(server)
-        .post(`${baseURI}/signin`)
-        .send(mockDataClone)
-        .end((err, res) => {
-          const { status, error, missingFields } = res.body;
-
-          should.not.exist(err);
-          res.redirects.length.should.eql(0);
-          res.type.should.eql('application/json');
-          res.status.should.eql(200);
-
-          error.should.be.a('string');
-          error.should.equal('1 field(s) are missing!');
-          should.exist(status);
-          status.should.equal('error');
-          should.exist(missingFields);
-          missingFields.should.be.an('array');
-          done();
-        });
-    });
-
-    it("it should not sign the user in if they're not present in the system", done => {
-      const mockDataClone = Object.assign({}, mockData.signin);
-      mockDataClone.email = 'test@g.com';
-
-      chai
-        .request(server)
-        .post(`${baseURI}/signin`)
-        .send(mockDataClone)
-        .end((err, res) => {
-          const { status, error } = res.body;
-
-          should.not.exist(err);
-          res.redirects.length.should.eql(0);
-          res.type.should.eql('application/json');
-          res.status.should.eql(200);
-
-          error.should.be.a('string');
-          error.should.equal('Wrong Email or Password. Please try again :)');
-          should.exist(status);
-          status.should.equal('error');
-          done();
-        });
-    })
-  });
-
-  describe('/POST /auth/signup', function() {
+  describe('/POST /users/signup', function() {
     it('should register a new user', done => {
       chai
         .request(server)
@@ -117,10 +38,8 @@ describe.skip('User', function() {
           status.should.eql('success');
           should.exist(data);
           data.should.be.an('object');
-          should.exist(data.token);
+          should.exist(data.message);
           data.token.should.be.a('string');
-          should.exist(data.user_id);
-          data.user_id.should.be.a('number');
           done();
         });
     });
@@ -135,19 +54,17 @@ describe.skip('User', function() {
         .post(`${baseURI}/signup`)
         .send(mockDataClone)
         .end((err, res) => {
-          const { status, error, missingFields } = res.body;
+          const { error, message } = res.body;
 
           should.not.exist(err);
           res.redirects.length.should.eql(0);
           res.status.should.eql(200);
           res.type.should.eql('application/json');
 
-          status.should.eql('error');
           should.exist(error);
-          should.exist(missingFields);
-          error.should.be.a('string');
-          error.should.eql('1 field(s) are missing!');
-          missingFields.should.be.an('array');
+          should.exist(message);
+          error.should.eql(true);
+          message.should.be.a('string');
           done();
         });
     });
@@ -158,7 +75,7 @@ describe.skip('User', function() {
         .post(`${baseURI}/signup`)
         .send(mockData.signup)
         .end((err, res) => {
-          const { status, error } = res.body;
+          const { error, message } = res.body;
 
           should.not.exist(err);
           should.not.exist(err);
@@ -166,20 +83,114 @@ describe.skip('User', function() {
           res.type.should.eql('application/json');
           res.status.should.eql(200);
 
-          status.should.eql('error');
           should.exist(error);
-          error.should.be.a('string');
-          error.should.equal('This email exists already in our database.');
+          should.exist(message);
+          error.should.be(true);
+          message.should.be.a('string');
+          message.should.equal('user already exists');
+          done();
+        });
+    });
+  });
+
+  describe('/POST /users/login', function() {
+    it('it should sign the user in', done => {
+      chai
+        .request(server)
+        .post(`${baseURI}/login`)
+        .send(mockData.signin)
+        .end((err, res) => {
+          const { user, token } = res.body;
+
+          should.not.exist(err);
+          res.redirects.length.should.eql(0);
+          res.type.should.eql('application/json');
+          res.status.should.eql(200);
+
+          should.exist(user);
+          should.exist(token);
+          user.should.be.an('object');
+          should.exist(user.username);
+          should.exist(user.email);
+          token.should.be.a('string');
+          user.username.should.be.a('string');
+          user.email.should.be.a('string');
           done();
         });
     });
 
-    this.afterAll((done) => {
-      client.query(DELETE_USER_BY_EMAIL_QUERY, [mockData.signup.email])
-        .then(() => {
+    it('it should not sign the user in if there are ANY fields missing.', done => {
+      const mockDataClone = Object.assign({}, mockData.signin);
+      delete mockDataClone.email;
+
+      chai
+        .request(server)
+        .post(`${baseURI}/login`)
+        .send(mockDataClone)
+        .end((err, res) => {
+          const { error, message } = res.body;
+
+          should.not.exist(err);
+          res.redirects.length.should.eql(0);
+          res.type.should.eql('application/json');
+          res.status.should.eql(200);
+
+          should.exist(error);
+          should.exist(message);
+          message.should.be.a('string');
+          error.should.be(true);
           done();
-        })
-        .catch(e => console.log(e));
+        });
+    });
+
+    it("it should not sign the user in if they're not present in the system", done => {
+      const mockDataClone = Object.assign({}, mockData.signin);
+      mockDataClone.email = 'test@g.com';
+
+      chai
+        .request(server)
+        .post(`${baseURI}/login`)
+        .send(mockDataClone)
+        .end((err, res) => {
+          const { message, error } = res.body;
+
+          should.not.exist(err);
+          res.redirects.length.should.eql(0);
+          res.type.should.eql('application/json');
+          res.status.should.eql(200);
+
+          should.exist(message);
+          should.exist(error);
+          error.should.eql(true);
+          message.should.equal('email or password incorrect!');
+          done();
+        });
+    })
+
+    it("it should not sign the user in if they use a wrong password", done => {
+      const mockDataClone = Object.assign({}, mockData.signin);
+      mockDataClone.password = 'somethingelseentirely';
+
+      chai
+        .request(server)
+        .post(`${baseURI}/login`)
+        .send(mockDataClone)
+        .end((err, res) => {
+          const { message, error } = res.body;
+
+          should.not.exist(err);
+          res.redirects.length.should.eql(0);
+          res.type.should.eql('application/json');
+          res.status.should.eql(200);
+
+          should.exist(message);
+          should.exist(error);
+          error.should.eql(true);
+          message.should.equal('email or password incorrect!');
+          done();
+        });
     })
   });
 });
+
+// clean db after...

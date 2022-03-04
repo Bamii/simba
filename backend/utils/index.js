@@ -11,11 +11,9 @@ function getType(o) {
 
 async function convert({ origin_currency, destination_currency, value }) {
   const url = `https://v6.exchangerate-api.com/v6/${EXCHANGE_ACCESS_KEY}/pair/${origin_currency}/${destination_currency}/${value}`
-  const url2 = 'https://api.exchangeratesapi.io/v1/convert?access_key=' + EXCHANGE_ACCESS_KEY + '&from=' + origin_currency + '&to=' + destination_currency + '&amount=' + value
   const res = await axios.get(url)
-  // if(res)
-  console.log(res);
-  return { from_value:value, to_value: res.conversion_result , rate: res.conversion_rate };
+
+  return { from_value:value, to_value: res.data.conversion_result , rate: res.data.conversion_rate };
 }
 
 function getVersionNumber() {
