@@ -58,6 +58,8 @@ router.post('/signup', async function(req, res, next) {
 
     let user = await User.findOne({ email }).exec();
     if(user) throw new ApplicationError('user already exists');
+    user = await User.findOne({ username }).exec();
+    if(user) throw new ApplicationError('user already exists');
 
     const password = hashPassword({ password: _password })
     user = new User({ username, email, password })
