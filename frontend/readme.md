@@ -1,2 +1,2 @@
 # free.money frontend
-https://
+https://freemoneyapp.netlify.app/
