@@ -46,7 +46,6 @@ export default createStore({
   actions: {
     async login({ dispatch, commit }, opts) {
       try {
-        console.log('df', API_BASE_URL, API_LOGIN_URL)
         const { data } = await axios.post(API_LOGIN_URL, opts)
         storeCredentials('token', data.token);
         storeCredentials('user', JSON.stringify(data.user));
