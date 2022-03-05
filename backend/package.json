@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "test": "mocha"
+    "test": "mocha --exit --timeout 10000",
+    "test-travis": "mocha --exit"
   },
   "dependencies": {
     "axios": "^0.26.0",

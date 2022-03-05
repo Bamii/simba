@@ -30,15 +30,14 @@ router.post('/login', async function(req, res, next) {
       throw new ApplicationError(`missing field(s) [${missingFields.join(',')}]!`)
 
     const user = await User.findOne({ email })
-    if(!user) throw new ApplicationError('email or password incorrect!')
-    if(!comparePassword(password, user.password)) throw new ApplicationError('email or password incorrect!')
+    if(!user || !comparePassword(password, user.password))
+      throw new ApplicationError('email or password incorrect!')
 
     res.status(200).send({
       token: generateToken({ payload: { username: user.username, email, iat: Date.now() }}),
       user: { email, username: user.username }
     });
   } catch (e) {
-    console.log(e)
     if(e.name === ERR_NAME) {
       res.status(200).send({ error: true, message: e.message });
     } else {

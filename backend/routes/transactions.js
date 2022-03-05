@@ -10,7 +10,7 @@ router.use(passport.authenticate('jwt', { session: false }))
 
 router.get('/', async function(req, res, next) {
   try {
-    const { email, id } = req.user;
+    const { email } = req.user;
     const user = await User.findOne({ email })
     const transactions = await user.transactions()
     return res.status(200).send({ message: transactions })
@@ -30,7 +30,7 @@ router.post('/create', async function(req, res, next) {
       throw new ApplicationError(`missing field(s) [${missingFields.join(',')}]!`)
 
     if(value < 0)
-      throw new ApplicationError('cannot send a negative amount. you sly human!')
+      throw new ApplicationError('cannot send a negative amount. you sly creature!')
 
     const user = await User.findOne({ email })
     const receipientUser = await User.findOne({ email: receipient })

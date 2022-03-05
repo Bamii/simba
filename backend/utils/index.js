@@ -10,10 +10,13 @@ function getType(o) {
 }
 
 async function convert({ origin_currency, destination_currency, value }) {
-  const url = `https://v6.exchangerate-api.com/v6/${EXCHANGE_ACCESS_KEY}/pair/${origin_currency}/${destination_currency}/${value}`
-  const res = await axios.get(url)
-
-  return { from_value:value, to_value: res.data.conversion_result , rate: res.data.conversion_rate };
+  try {
+    const url = `https://v6.exchangerate-api.com/v6/${EXCHANGE_ACCESS_KEY}/pair/${origin_currency}/${destination_currency}/${value}`
+    const res = await axios.get(url)
+    return { from_value:value, to_value: res.data.conversion_result , rate: res.data.conversion_rate };
+  } catch (error) {
+    return { from_value:value, to_value: value , rate: 1 };
+  }
 }
 
 function getVersionNumber() {
