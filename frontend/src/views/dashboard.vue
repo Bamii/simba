@@ -2,7 +2,7 @@
   <Layout>
     <div class="">
       <h1 class="welcome"> <span>welcome, </span> {{ user && user.username }} </h1>
-      
+
       <div class="balances">
         <div v-if="loading">
           loading balances...
@@ -19,19 +19,25 @@
             <div class="top-text">send some cash...</div>
           </div>
           <form @submit.prevent="sendMoney">
-            <select v-model="from_currency" name="" id="">
-              <option value="" selected disabled>--- from which currency ---</option>
-              <option value="USD">USD</option>
-              <option value="NGN">NGN</option>
-              <option value="GBP">GBP</option>
-              <option value="EUR">EUR</option>
-            </select>
-            <Input
-              :value="amount"
-              @update:value="amount = $event"
-              placeholder="amount to send"
-              type="number"
-            />
+            <span>
+              i want to send
+            </span>
+            <div class="input-group">
+              <Input
+                :value="amount"
+                @update:value="amount = $event"
+                placeholder="amount to send"
+                type="number"
+              />
+              <select v-model="from_currency" name="" id="">
+                <option value="" selected disabled>--- from which currency ---</option>
+                <option value="USD">USD</option>
+                <option value="NGN">NGN</option>
+                <option value="GBP">GBP</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+            <span>to be receieved as</span>
             <select v-model="to_currency" name="" id="">
               <option value="" selected disabled>--- to which currency ---</option>
               <option value="USD">USD</option>
@@ -39,6 +45,9 @@
               <option value="GBP">GBP</option>
               <option value="EUR">EUR</option>
             </select>
+            <span>
+              to be received by
+            </span>
             <select v-model="receipient" name="" id="">
               <option value="" selected disabled>--- select receipient ---</option>
               <option
@@ -78,7 +87,7 @@
             <div class="transaction-middle">
               {{ (new Date(item.created_at)).toDateString() }}
             </div>
-            
+
             <div class="transaction-half">
               <div class="transaction-description">
                 <span v-if="item.senderId === user.email">{{ item.receiverId }}</span>
@@ -110,7 +119,8 @@ export default {
       from_currency: '',
       to_currency: '',
       amount: 0,
-      receipient: ''
+      receipient: '',
+      rate: 1
     }
   },
   computed: {
@@ -127,7 +137,7 @@ export default {
   methods: {
     async dash() {
       const dashboard = await this.$store.dispatch('dashboard_details')
-      
+
       if(dashboard) {
         this.transactions = dashboard.transactions
         this.balance = dashboard.balance
@@ -166,7 +176,7 @@ export default {
     }
   },
   mounted() {
-    this.dash()
+    this.dash();
   },
 }
 </script>
@@ -226,7 +236,7 @@ export default {
   align-items: center;
   margin-bottom: 2rem;
   position: relative;
-  
+
   .top-text {
     font-size: 1.8rem;
   }
@@ -245,10 +255,20 @@ export default {
 
   .transfer {
     margin: 2rem 0;
-    
+
     form {
       display: flex;
       flex-direction: column;
+
+      .input-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      > span {
+        margin-bottom: 0.2rem;
+      }
 
       select, input {
         padding: 0.7rem;
@@ -320,5 +340,3 @@ export default {
   }
 }
 </style>
-
-
