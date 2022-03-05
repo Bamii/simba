@@ -37,11 +37,27 @@ describe.skip('User', function() {
         });
     });
 
-    it('it should register a new user', done => {
+    it('it should register two new users', done => {
       chai
         .request(server)
         .post(`${baseURI}/signup`)
         .send(mockData.signup)
+        .end((err, res) => {
+          const { message } = res.body;
+
+          should.not.exist(err);
+          res.status.should.eql(200);
+          res.type.should.eql('application/json');
+
+          should.exist(message);
+          message.should.eql('congratulations on signing up!. please login now.');
+          done();
+        });
+
+      chai
+        .request(server)
+        .post(`${baseURI}/signup`)
+        .send(mockData.signup2)
         .end((err, res) => {
           const { message } = res.body;
 

@@ -9,6 +9,7 @@ const { mockData } = require('./constants')
 let should = chai.should();
 chai.use(chaiHttp);
 
+let transaction_id;
 let token;
 let id;
 describe('Transactions', function () {
@@ -60,13 +61,13 @@ describe('Transactions', function () {
         .send(mockData.createTransaction)
         .end((err, res) => {
           const { transaction, message } = res.body;
-
           should.not.exist(err);
           res.status.should.eql(200);
           res.type.should.eql('application/json');
 
           should.exist(transaction);
           should.exist(message);
+          transaction_id = transaction._id;
           transaction.should.be.an('object');
           should.exist(transaction.senderId)
           should.exist(transaction.receiverId)
