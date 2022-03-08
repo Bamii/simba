@@ -50,12 +50,12 @@ export default {
       const res = await this.$store.dispatch('signup', {
         username: this.username, email: this.email, password: this.password
       })
-      
+
       if(!res || res.error) {
-        this.notify({ type: 'error', message: res ? res.message : 'internal service error'});
+        this.notify({ type: 'error', message: res ? res.message : 'an error occured, please try again.'});
       } else {
         const that = this;
-        this.notify({ type: 'success', message:'successfully signed up! please login.'});
+        this.notify({ type: 'info', message: 'signed up successfully! you will be redirected to the login page now.' })
 
         setTimeout(() => {
           this.unnotify();
@@ -66,4 +66,3 @@ export default {
   },
 };
 </script>
-

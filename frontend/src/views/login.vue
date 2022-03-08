@@ -47,8 +47,12 @@ export default {
       })
 
       this.unnotify();
-      if(!res || res.error) this.notify({ type: 'error', message: res ? res.message : 'internal service error'});
-      else this.$router.push('/dashboard');
+      if(!res || res.error) {
+        this.notify({ type: 'error', message: res ? res.message : 'an error occured, please try again.'});
+      } else {
+        this.notify({ type: 'info', message: 'logged in successfully!' })
+        this.$router.push('/dashboard')
+      };
     }
   },
 };
