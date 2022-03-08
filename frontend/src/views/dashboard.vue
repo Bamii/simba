@@ -180,7 +180,6 @@ export default {
       this.to_currency = '';
       this.amount = 0;
       this.receipient = '';
-      this.rate = '';
     }
   },
   mounted() {
