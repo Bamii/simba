@@ -171,8 +171,16 @@ export default {
       this.notify({
         type: 'success',
         message: `successfully transfered ${from_value}${origin_currency}(${to_value}${destination_currency}) to ${receipient}!`
-      })
+      });
+      this.resetTransferForm();
       this.dash();
+    },
+    resetTransferForm() {
+      this.from_currency = '';
+      this.to_currency = '';
+      this.amount = 0;
+      this.receipient = '';
+      this.rate = '';
     }
   },
   mounted() {
