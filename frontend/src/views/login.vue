@@ -46,12 +46,16 @@ export default {
         password: this.password
       })
 
-      this.unnotify();
       if(!res || res.error) {
         this.notify({ type: 'error', message: res ? res.message : 'an error occured, please try again.'});
       } else {
+        const that = this;
         this.notify({ type: 'info', message: 'logged in successfully!' })
-        this.$router.push('/dashboard')
+
+        setTimeout(() => {
+          this.unnotify();
+          that.$router.push('/dashboard')
+        }, 1000);
       };
     }
   },
