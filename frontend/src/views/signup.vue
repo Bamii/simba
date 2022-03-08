@@ -60,7 +60,7 @@ export default {
         setTimeout(() => {
           this.unnotify();
           that.$router.push('/login')
-        }, 2000);
+        }, 1000);
       }
     }
   },
