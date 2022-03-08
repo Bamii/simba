@@ -333,7 +333,9 @@ export default {
 
   @media (min-width: 380px) {
     grid-template-columns: 1fr 2fr;
+  }
 
+  @media (min-width: 1280px) {
     .transactions .transaction {
       grid-template-columns: 2fr 1fr 2fr;
     }
